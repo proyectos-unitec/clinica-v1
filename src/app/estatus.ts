@@ -1,3 +1,4 @@
-export class Estatus {
+export interface Estatus {
   success?:boolean;
+  mensaje?:string;
 }

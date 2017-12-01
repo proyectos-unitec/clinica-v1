@@ -1,45 +1,39 @@
 import { Component, OnInit } from '@angular/core';
 import {Usuario} from './usuario';
 import {Estatus} from './estatus'
-import {UsuarioService} from './usuario.service';
+import {HttpClient, HttpHeaders} from '@angular/common/http'
+
 
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers:[UsuarioService]
+
 })
 export class AppComponent implements OnInit{
 usuario:Usuario;
 estatus:Estatus;
 
-  constructor(private servicio:UsuarioService){
+  constructor(private http:HttpClient){
 
   }
   ngOnInit(): void {
- this.usuario={
-   "email":"",
-   "password":""
-            }
-
- 
+ this.usuario={}
+ this.estatus={}
   }
-
-  //Metodos primer par "guardar"
-  guardarUsuario(){
-    return this.servicio.guardarUsuario(this.usuario).
-    subscribe(estatus=>this.estatus=estatus)
-  }
+  
 
 guardar():void{
-console.log("usuario "+this.usuario.email+"password "+this.usuario.password);
-  this.guardarUsuario();
+
+  this.http.post<Estatus>('http://tesis-unitec.herokuapp.com/api/usuario',
+  this.usuario,{headers:new HttpHeaders().set("Content-Type","application/json")})
+  .subscribe(datos=>{this.estatus=datos})
   setTimeout(()=>{
     
   console.log("Usuario guardado com estatus "+this.estatus.success);
     
-    },2000);
+    },2000)
 
 
  }
